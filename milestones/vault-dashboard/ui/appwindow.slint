@@ -1,0 +1,92 @@
+import { Button, LineEdit, VerticalBox, TabWidget } from "std-widgets.slint";
+
+export component AppWindow inherits Window {
+    title: "Vault Dashboard";
+    width: 400px;
+    height: 300px;
+
+    // These are "Properties" that Rust can read/write
+    in-out property <string> results: "Enter a key to search";
+    in-out property <string> status: "Show status";
+    callback fetch-data(string);
+    callback save-data(string, string);
+
+    TabWidget {
+        Tab {
+            title: "Fetch";
+            VerticalBox {
+                alignment: start;
+                spacing: 10px;
+
+                Text {
+                    text: "Key-Value Explorer";
+                    font-size: 24px;
+                    horizontal-alignment: center;
+                }
+
+                input := LineEdit {
+                    placeholder-text: "Enter key here...";
+                }
+
+                Button {
+                    text: "Fetch Value";
+                    clicked => {
+                        // This triggers the callback in Rust
+                        root.fetch-data(input.text);
+                    }
+                }
+
+                Rectangle {
+                    background: #f0f0f0;
+                    height: 100px;
+                    Text {
+                        text: root.results;
+                        color: blue;
+                        font-size: 18px;
+                    }
+                }
+            }
+        }
+        Tab {
+            title: "Save";
+            VerticalBox {
+                alignment: start;
+                spacing: 10px;
+
+                Text {
+                    text: "Key-Value Explorer";
+                    font-size: 24px;
+                    horizontal-alignment: center;
+                }
+
+                keyInput := LineEdit {
+                    placeholder-text: "Enter key here...";
+                }
+
+                valueInput := LineEdit {
+                    placeholder-text: "Enter value here...";
+                }
+
+                Button {
+                    text: "Save Data";
+                    clicked => {
+                        // This triggers the callback in Rust
+                        root.save-data(keyInput.text, valueInput.text);
+                    }
+                }
+
+                Rectangle {
+                    background: #f0f0f0;
+                    height: 100px;
+                    Text {
+                        text: root.status;
+                        color: blue;
+                        font-size: 18px;
+                    }
+                }
+            }
+        }
+    }
+
+    
+}
